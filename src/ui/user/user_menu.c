@@ -4,7 +4,7 @@
 #include "user.h"
 #include "database.h"
 
-void userMenu(MYSQL *conn, User loggedUser)
+void userMenu(MYSQL *conn, User* loggedUser)
 {
 	char *data = NULL;
 	size_t len = 0;
@@ -33,15 +33,15 @@ void userMenu(MYSQL *conn, User loggedUser)
 						data[read-1] = '\0';
 					}
 				}
-				insertData(conn, loggedUser.id, data);
+				insertData(conn, loggedUser->id, data);
 				break;
 			case 2:
 				system("clear");
-				listData(conn, loggedUser.id, loggedUser.role);
+				listData(conn, loggedUser->id, loggedUser->role);
 				break;
 			case 3:
 				system("clear");
-				listData(conn, loggedUser.id, loggedUser.role);
+				listData(conn, loggedUser->id, loggedUser->role);
 				deleteData(conn);
 				break;
 			case 4:
