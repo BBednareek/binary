@@ -13,6 +13,7 @@ void errorHandler(MYSQL *conn);
 User* login(MYSQL *conn, const char *username, const char *password);
 void insertUser(MYSQL *conn, const char *username, const char *password, const char *role);
 void listUsers(MYSQL *conn);
+void deleteUser(MYSQL *conn);
 
 void insertData(MYSQL *conn, int user_id, const char *data);
 void updateData(MYSQL *conn, int id, const char *newData);

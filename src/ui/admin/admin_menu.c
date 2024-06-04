@@ -53,9 +53,8 @@ void adminMenu(MYSQL *conn){
 			deleteData(conn);
 			break;
 			case 6:
-			//TODO
-			system("clear");
-			printf("Metoda w trakcie tworzenia!");
+			listUsers(conn);
+			deleteUser(conn);
 			break;
 			case 7:
 			printf("Do zobaczenia!\n");

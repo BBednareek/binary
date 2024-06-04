@@ -22,6 +22,23 @@ void listUsers(MYSQL *conn){
 	mysql_free_result(res);
 }
 
+void deleteUser(MYSQL *conn){
+	int user_id;
+
+	printf("\nPodaj id uzytkownika, ktorego chcesz usunac: ");
+	scanf("%d", &user_id);
+	
+	char query[256];
+	snprintf(query, sizeof(query), "DELETE FROM users WHERE id = %d", user_id);
+	if (mysql_query(conn, query)){
+		errorHandler(conn);
+	}
+	
+	system("clear");
+
+	printf("Pomyslnie usunieto uzytkownika o id %d", user_id);
+}
+
 
 User* login(MYSQL *conn, const char *username, const char *password){
 	static User loggedUser;
