@@ -82,19 +82,26 @@ void updateData(MYSQL *conn, int id, const char *newData)
 	printf("Pomyslnie zaktualizowano wiersz o id %d\n", id);
 }
 
-void deleteData(MYSQL *conn){
-	int noteId;
+void deleteData(MYSQL *conn, const int user_id) {
+    int note_id;
+    
+    printf("Podaj id wpisu, ktory chcesz usunac: ");
+    scanf("%d", &note_id);
 
-	printf("Podaj id wpisu, ktory chcesz usunac: ");
-	scanf("%d", &noteId);
+    char query[256];
+    snprintf(query, sizeof(query), "DELETE FROM data WHERE id = %d AND user_id = %d", note_id, user_id);
 
-	char query[256];
-	snprintf(query, sizeof(query), "DELETE FROM data WHERE id = %d", noteId);
-
-	if (mysql_query(conn, query)){
-		errorHandler(conn);
-	}
-
-	system("clear");
-	printf("Pomyslnie usunieto wpis o id %d\n", noteId);
+    if (mysql_query(conn, query)) {
+        errorHandler(conn);
+    } else {
+        int affectedRows = mysql_affected_rows(conn);
+        if (affectedRows > 0) {
+            system("clear");
+            printf("Pomyslnie usunieto wpis o id %d\n", note_id);
+        } else {
+            system("clear");
+            printf("Wpis o id %d nie istnieje lub nie nalezy do uzytkownika o id %d\n", note_id, user_id);
+        }
+    }
 }
+

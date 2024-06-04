@@ -40,7 +40,7 @@ int main() {
 
             if (loginAttempts >= MAX_ATTEMPTS) {
                 printf("Maksymalna liczba prob logowania przekroczona.\n");
-                break;
+				break;
             } else {
                 printf("Sprobuj ponownie!\n\n");
             }

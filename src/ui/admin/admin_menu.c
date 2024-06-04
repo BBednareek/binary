@@ -49,8 +49,11 @@ void adminMenu(MYSQL *conn){
 			listData(conn, -1, "admin");
 			break;
 			case 5:
+			int user_id;
 			listData(conn, -1, "admin");
-			deleteData(conn);
+			printf("Podaj id uzytkownika, ktorego wpis chcesz usunac: ");
+			scanf("%d", &user_id);
+			deleteData(conn, user_id);
 			break;
 			case 6:
 			listUsers(conn);

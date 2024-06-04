@@ -17,7 +17,7 @@ void deleteUser(MYSQL *conn);
 
 void insertData(MYSQL *conn, int user_id, const char *data);
 void updateData(MYSQL *conn, int id, const char *newData);
-void deleteData(MYSQL *conn);
+void deleteData(MYSQL *conn, const int user_id);
 void listData(MYSQL *conn, int user_id, const char *role);
 
 #endif // DATABASE_H

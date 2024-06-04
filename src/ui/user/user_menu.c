@@ -42,7 +42,7 @@ void userMenu(MYSQL *conn, User* loggedUser)
 			case 3:
 				system("clear");
 				listData(conn, loggedUser->id, loggedUser->role);
-				deleteData(conn);
+				deleteData(conn, loggedUser->id);
 				break;
 			case 4:
 				printf("Do zobaczenia!\n");
