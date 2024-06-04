@@ -22,9 +22,10 @@ MYSQL* connectDatabase(){
 }
 
 void errorHandler(MYSQL *conn){
-	fprintf(stderr, "Blad podczas wykonania zapytania SQL: %s", mysql_error(conn));
-	exit(1);
-	closeDatabase(conn);
+	system("clear");
+	
+	printf("Blad podczas wykonania zapytania SQL!\n");
+	printf("Tresc: %s\nKod bledu: %d", mysql_error(conn), mysql_errno(conn));
 }
 
 void closeDatabase(MYSQL *conn){

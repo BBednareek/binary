@@ -85,8 +85,7 @@ User* login(MYSQL *conn, const char *username, const char *password){
 	return &loggedUser;
 }
 
-void insertUser(MYSQL *conn, const char *username, const char *password, const char *role)
-{
+void insertUser(MYSQL *conn, const char *username, const char *password, const char *role){
 	char query[256];
 	snprintf(query, sizeof(query), "INSERT INTO users (username, password, role) "
 									"VALUES ('%s', '%s', '%s')",
