@@ -6,7 +6,7 @@
 #include "database.h"
 
 void adminMenu(MYSQL *conn){
-	int optionChoice, userId;
+	int optionChoice, userId, note_id;
 
 	do{
 		printf("\nMenu admina\n");
@@ -14,9 +14,10 @@ void adminMenu(MYSQL *conn){
 		printf("2. Pokaz wszystkich uzytkownikow\n");
 		printf("3. Pokaz notatki konkretnego uzytkownika\n");
 		printf("4. Pokaz wszystkie notatki\n");
-		printf("5. Usun notatke\n");
-		printf("6. Usun uzytkownika\n");
-		printf("7. Wyjscie\n");
+		printf("5. Edytuj notatke\n");
+		printf("6. Usun notatke\n");
+		printf("7. Usun uzytkownika\n");
+		printf("8. Wyjscie\n");
 		printf("Wybor: ");
 		scanf("%d", &optionChoice);
 
@@ -49,17 +50,25 @@ void adminMenu(MYSQL *conn){
 			listData(conn, -1, "admin");
 			break;
 			case 5:
-			int user_id;
+				system("clear");
+				listData(conn, -1, "admin");
+				printf("Podaj indeks uzytkownika, ktorego notatke chcesz edytowac: ");
+				scanf("%d", &userId);
+				printf("\nPodaj numer notatki, ktora chcesz edytowac: ");
+				scanf("%d", &note_id);
+				updateData(conn, note_id, userId);
+			break;
+			case 7:
 			listData(conn, -1, "admin");
 			printf("Podaj id uzytkownika, ktorego wpis chcesz usunac: ");
-			scanf("%d", &user_id);
-			deleteData(conn, user_id);
+			scanf("%d", &userId);
+			deleteData(conn, userId);
 			break;
 			case 6:
 			listUsers(conn);
 			deleteUser(conn);
 			break;
-			case 7:
+			case 8:
 			printf("Do zobaczenia!\n");
 			exit(1);
 			break;
@@ -67,5 +76,5 @@ void adminMenu(MYSQL *conn){
 			printf("Podaj prawidlowa opcje!");
 			break;
 		}
-	} while(optionChoice != 7);
+	} while(optionChoice != 8);
 }

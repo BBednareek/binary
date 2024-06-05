@@ -10,14 +10,16 @@ void userMenu(MYSQL *conn, User* loggedUser)
 	size_t len = 0;
 	ssize_t read;
 	int choice;
+	int note_id;
 
 	do
 	{
 		printf("\nMenu uzytkownika\n");
 		printf("1. Dodaj notatke\n");
 		printf("2. Pokaz moje notatki\n");
-		printf("3. Usun notatke\n");
-		printf("4. Wyjscie\n");
+		printf("3. Edytuj notatke\n");
+		printf("4. Usun notatke\n");
+		printf("5. Wyjscie\n");
 		printf("Wybor: ");
 		scanf("%d", &choice);
 
@@ -42,9 +44,15 @@ void userMenu(MYSQL *conn, User* loggedUser)
 			case 3:
 				system("clear");
 				listData(conn, loggedUser->id, loggedUser->role);
+				printf("\nKtora notatke chcesz edytowac: ");
+				scanf("%d", &note_id);
+				updateData(conn, note_id, loggedUser->id);
+			case 4:
+				system("clear");
+				listData(conn, loggedUser->id, loggedUser->role);
 				deleteData(conn, loggedUser->id);
 				break;
-			case 4:
+			case 5:
 				printf("Do zobaczenia!\n");
 				exit(1);
 				break;
@@ -52,5 +60,5 @@ void userMenu(MYSQL *conn, User* loggedUser)
 				printf("Podaj prawidlowa opcje!\n");
 				break;
 		}
-	} while (choice != 4);
+	} while (choice != 5);
 }

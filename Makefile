@@ -1,26 +1,21 @@
 CC = gcc
 
-# Ścieżki do katalogów
 INCLUDES = -Iinclude -Iinclude/binary_converter -Iinclude/database -Iinclude/database/user -Iinclude/database/data -Iinclude/ui
+
 SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = bin
 
-# Pliki źródłowe
 SRCS := $(wildcard $(SRC_DIR)/*.c) \
         $(wildcard $(SRC_DIR)/*/*.c) \
         $(wildcard $(SRC_DIR)/*/*/*.c)
 
-# Pliki obiektowe
 OBJS := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
-# Biblioteki
-LIBS = -lmysqlclient
+LIBS = -lmysqlclient -lncurses
 
-# Plik wykonywalny
 EXEC = main
 
-# Cele
 all: $(BIN_DIR)/$(EXEC)
 
 $(OBJ_DIR):

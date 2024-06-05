@@ -1,4 +1,5 @@
 #include <mysql/mysql.h>
+#include <ncurses.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -66,22 +67,6 @@ void insertData(MYSQL *conn, int user_id, const char *data){
 	printf("Pomyslnie dodano nowy wpis\n");
 }
 
-void updateData(MYSQL *conn, int id, const char *newData)
-{
-	char binaryData[MAX_BINARY_LENGTH];
-	char query[MAX_BINARY_LENGTH + 256];
-	
-	stringToBinary(newData, binaryData);
-	snprintf(query, sizeof(query), "UPDATE data SET data = '%s' WHERE id = %d", binaryData, id);
-
-	if (mysql_query(conn, query)){
-		errorHandler(conn);
-	}
-
-	system("clear");
-	printf("Pomyslnie zaktualizowano wiersz o id %d\n", id);
-}
-
 void deleteData(MYSQL *conn, const int user_id) {
     int note_id;
     
@@ -105,3 +90,108 @@ void deleteData(MYSQL *conn, const int user_id) {
     }
 }
 
+void updateData(MYSQL *conn, const int id, const int user_id){
+	system("clear");
+
+	char query[MAX_BINARY_LENGTH + 256];
+	
+	snprintf(query, sizeof(query), "SELECT data FROM data WHERE id = %d AND user_id = %d", id, user_id);
+
+	if (mysql_query(conn, query)){
+		errorHandler(conn);
+	}
+
+	MYSQL_RES *result = mysql_store_result(conn);
+
+	if (result == NULL) {
+		errorHandler(conn);
+	}
+
+	int num_fields = mysql_num_fields(result);
+	MYSQL_ROW row;
+
+	char text[MAX_STRING_LENGTH] = "";
+
+	if ((row = mysql_fetch_row(result))) {
+		binaryToString(row[0], text);
+	}
+
+	mysql_free_result(result);
+
+	system("clear");
+	
+	initscr();
+	cbreak();
+	noecho();
+	keypad(stdscr, TRUE);
+
+	printw("Notatka, ktora chcesz edytowac: %s\n", text);
+	refresh();
+
+	edit_text(text);
+
+	char binaryData[MAX_BINARY_LENGTH];
+
+	stringToBinary(text, binaryData);
+	snprintf(query, sizeof(query), "UPDATE data SET data = '%s' WHERE id = %d AND user_id = %d", binaryData, id, user_id);
+
+	if(mysql_query(conn, query)) {
+		errorHandler(conn);
+	} else {
+		clear();
+		printw("Zaktualizowana notatka: %s\n", text);
+		refresh();
+	}
+	getch();
+	endwin();
+}
+
+void edit_text(char *text) {
+	int ch;
+	int pos = 0;
+	int len = strlen(text);
+
+	mvprintw(1, 0, "Edit the text and press ENTER when done:\n");
+	mvprintw(2, 0, "%s", text);
+	move(2, pos);
+
+	while((ch = getch()) != '\n') {
+		if(ch == KEY_LEFT) {
+			if(pos>0){
+				pos--;
+			}
+		} else if (ch == KEY_RIGHT) {
+			if(pos < len) {
+				pos++;
+			}	
+		} else if (ch == KEY_BACKSPACE || ch == 127) {
+			if (pos > 0){
+				memmove(&text[pos-1], &text[pos], len - pos + 1);
+				pos--;
+				len--;
+				text[len] = '\0';
+				mvprintw(2, 0, "%s ", text);
+				move(2, pos);
+			}
+		} else if (ch == KEY_DC) {
+			if (pos < len) {
+				memmove(&text[pos], &text[pos+1], len - pos);
+				len--;
+				text[len] = '\0';
+				mvprintw(2, 0, "%s ", text);
+				move(2, pos);
+			}
+		} else if (ch >= 32 && ch <= 126) {
+			if (len < MAX_STRING_LENGTH - 1){
+				memmove(&text[pos+1], &text[pos], len - pos + 1);
+				text[pos] = ch;
+				pos++;
+				len++;
+				text[len] = '\0';
+				mvprintw(2, 0, "%s", text);
+				move(2, pos);
+			}
+		}
+		move(2, pos);
+		refresh();
+	}}
